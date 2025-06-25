@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guia de Técnicas em Vendas </title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --azul: #144a85;
+      --azul-claro: #e6f0fa;
+      --fundo-branco: #ffffff;
+      --fundo-escuro: #0a1e33;
+      --texto-escuro: #0a1e33;
+      --texto-claro: #f0f4ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    body {
+      background: var(--fundo-branco);
+      color: var(--texto-escuro);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    body.dark {
+      background: var(--fundo-escuro);
+      color: var(--texto-claro);
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 3rem 2rem;
+      border-radius: 30px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    body.dark .container {
+      background: rgba(10, 30, 51, 0.85);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: var(--azul);
+    }
+
+    body.dark h1 {
+      color: #a3c9ff;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      background: #f0f4ff;
+    }
+
+    body.dark input {
+      background: #1a2d45;
+      color: #f0f4ff;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--azul);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0f3a6a;
+    }
+
+    .credit {
+      font-size: 0.75rem;
+      text-align: center;
+      margin-top: 1rem;
+      color: #888;
+    }
+
+    .toggle-theme {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--azul);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <h1>Bem-vindo ao Guia de Técnicas em Vendas</h1>
+    <p>Preencha para iniciar sua jornada!</p>
+    <input type="text" placeholder="Seu nome" id="nome" required />
+    <input type="email" placeholder="Seu e-mail" id="email" required />
+    <button id="startBtn">Começar Jornada 🚀</button>
+    <div class="credit">© Seu Nome - TCC 2025</div>
+  </div>
+
+  <button class="toggle-theme" id="toggleTheme">🌓</button>
+
+  <script>
+    // Ativa modo dark por padrão
+    document.body.classList.add('dark');
+
+    const toggle = document.getElementById("toggleTheme");
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+    });
+
+    const startBtn = document.getElementById('startBtn');
+    startBtn.addEventListener('click', () => {
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      if (!nome || !email) {
+        alert('Por favor, preencha nome e e-mail para continuar.');
+        return;
+      }
+
+      // Redirecionar para técnicas.html após preencher o formulário
+      window.location.href = 'tecnicas.html';
+    });
+  </script>
+</body>
+</html>

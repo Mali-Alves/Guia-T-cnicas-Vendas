@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parabéns!</title>
+  <style>
+    :root {
+      --azul: #144a85;
+      --fundo-branco: #fff;
+      --fundo-escuro: #0a1e33;
+      --texto-escuro: #0a1e33;
+      --texto-claro: #f0f4ff;
+    }
+    body {
+      background: var(--fundo-branco);
+      color: var(--texto-escuro);
+      font-family: 'Poppins', sans-serif;
+      padding: 2rem;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    body.dark {
+      background: var(--fundo-escuro);
+      color: var(--texto-claro);
+    }
+    .resumo-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      max-width: 500px;
+      text-align: center;
+      transition: background 0.3s ease;
+    }
+    body.dark .resumo-container {
+      background: rgba(10,30,51,0.85);
+    }
+    h1 {
+      color: var(--azul);
+      margin-bottom: 1rem;
+    }
+    body.dark h1 {
+      color: #a3c9ff;
+    }
+    .score {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 1rem 0 2rem;
+    }
+    button {
+      background: var(--azul);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #0f3a6a;
+    }
+    .toggle-theme {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--azul);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="resumo-container">
+    <h1>Parabéns, <span id="userName"></span>!</h1>
+    <p>Você concluiu o quiz com a seguinte pontuação:</p>
+    <div class="score"><span id="quizScore">0</span>/<span id="quizTotal">0</span></div>
+    <button onclick="refazerQuiz()">Refazer Quiz</button>
+  </div>
+
+  <button class="toggle-theme" id="toggleTheme">🌓</button>
+
+  <script>
+    // Carregar nome e pontuação do localStorage
+    document.getElementById('userName').textContent = localStorage.getItem('userName') || 'Visitante';
+    document.getElementById('quizScore').textContent = localStorage.getItem('quizScore') || '0';
+    document.getElementById('quizTotal').textContent = localStorage.getItem('quizTotal') || '0';
+
+    // Função para refazer quiz limpando dados e voltando para a página inicial
+    function refazerQuiz() {
+      localStorage.removeItem('quizScore');
+      localStorage.removeItem('quizTotal');
+      // Se quiser limpar usuário também, descomente a linha abaixo
+      // localStorage.removeItem('userName');
+      window.location.href = 'index.html';
+    }
+
+    // Modo escuro persistente
+    const toggle = document.getElementById("toggleTheme");
+    const currentTheme = localStorage.getItem('theme') || 'light';
+
+    if(currentTheme === 'dark') {
+      document.body.classList.add('dark');
+      toggle.textContent = '☀️';
+    } else {
+      toggle.textContent = '🌓';
+    }
+
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      toggle.textContent = isDark ? '☀️' : '🌓';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+  </script>
+  
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quiz Moderno - Técnicas de Vendas</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --primary: #144a85;
+    --primary-light: #1e6edb;
+    --bg-light: #f9fbff;
+    --bg-dark: #0a1e33;
+    --text-light: #f0f4ff;
+    --text-dark: #0a1e33;
+    --green: #28a745;
+    --red: #dc3545;
+    --gray-light: #ccc;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+    font-family: 'Poppins', sans-serif;
+  }
+  body {
+    background: var(--bg-light);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 5rem;
+    transition: background 0.3s, color 0.3s;
+  }
+  body.dark {
+    background: var(--bg-dark);
+    color: var(--text-light);
+  }
+  h1 {
+    margin-bottom: 1rem;
+    color: var(--primary);
+    text-align: center;
+  }
+  body.dark h1 {
+    color: var(--primary-light);
+  }
+
+  .quiz-container {
+    background: var(--bg-light);
+    max-width: 600px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    padding: 2.5rem 2rem 3rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  body.dark .quiz-container {
+    background: #1a2d45;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: var(--gray-light);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+  body.dark .progress-fill {
+    background: var(--primary-light);
+  }
+
+  .question-number {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--primary);
+  }
+  body.dark .question-number {
+    color: var(--primary-light);
+  }
+
+  .question-text {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    min-height: 60px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .option-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(20,74,133,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    transition: background 0.3s, transform 0.2s;
+    user-select: none;
+    position: relative;
+  }
+  body.dark .option-btn {
+    box-shadow: 0 6px 15px rgba(30,110,219,0.6);
+  }
+  .option-btn:hover:not(:disabled) {
+    background: var(--primary-light);
+    transform: translateY(-3px);
+  }
+  .option-btn:disabled {
+    cursor: default;
+    opacity: 0.8;
+  }
+  .option-btn.correct {
+    background: var(--green);
+    box-shadow: 0 6px 20px rgba(40,167,69,0.6);
+    color: white;
+  }
+  .option-btn.wrong {
+    background: var(--red);
+    box-shadow: 0 6px 20px rgba(220,53,69,0.6);
+    color: white;
+  }
+
+  .feedback {
+    margin-top: 1.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-height: 28px;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .feedback.wrong {
+    color: var(--red);
+  }
+  .feedback svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .nav-buttons {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .nav-buttons button {
+    background: var(--primary);
+    border: none;
+    padding: 0.9rem 2.2rem;
+    border-radius: 30px;
+    font-weight: 700;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(20,74,133,0.5);
+    transition: background 0.3s;
+  }
+  .nav-buttons button:disabled {
+    background: #888;
+    cursor: default;
+    box-shadow: none;
+  }
+  .nav-buttons button:hover:not(:disabled) {
+    background: var(--primary-light);
+  }
+  body.dark .nav-buttons button {
+    box-shadow: 0 8px 20px rgba(30,110,219,0.8);
+  }
+
+  /* Toggle theme button - bola */
+  .toggle-theme {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 65px;
+    height: 65px;
+    background: var(--primary);
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(20,74,133,0.5);
+    transition: background 0.3s;
+    user-select: none;
+  }
+  .toggle-theme:hover {
+    background: var(--primary-light);
+  }
+  body.dark .toggle-theme {
+    background: var(--primary-light);
+    box-shadow: 0 8px 25px rgba(30,110,219,0.9);
+  }
+</style>
+</head>
+<body>
+  <h1>Quiz de Técnicas em Vendas</h1>
+  <div class="quiz-container" role="main" aria-live="polite" aria-atomic="true">
+    <div class="progress-bar" aria-label="Barra de progresso do quiz">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="question-number" id="questionNumber"></div>
+    <div class="question-text" id="questionText"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback" aria-live="assertive"></div>
+    <div class="nav-buttons">
+      <button id="prevBtn" aria-label="Pergunta anterior" disabled>Anterior</button>
+      <button id="nextBtn" aria-label="Próxima pergunta" disabled>Próximo</button>
+    </div>
+  </div>
+
+  <button aria-label="Alternar modo noturno" class="toggle-theme" id="toggleTheme">🌓</button>
+
+<script>
+  // Persistência do modo dark via localStorage
+  const body = document.body;
+  const toggleThemeBtn = document.getElementById('toggleTheme');
+
+  function setDarkMode(on) {
+    if(on) {
+      body.classList.add('dark');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      body.classList.remove('dark');
+      localStorage.setItem('darkMode', 'false');
+    }
+  }
+
+  // Ao carregar a página, verifica localStorage
+  if(localStorage.getItem('darkMode') === 'true') {
+    setDarkMode(true);
+  }
+
+  toggleThemeBtn.addEventListener('click', () => {
+    const isDark = body.classList.contains('dark');
+    setDarkMode(!isDark);
+  });
+
+  // Quiz data
+  const quiz = [
+    {
+      q: "Qual o significado da técnica AIDA?",
+      options: [
+        "Atenção, Interesse, Desejo e Ação",
+        "Análise, Identificação, Decisão, Ação",
+        "Avaliação, Informação, Desenvolvimento, Ação"
+      ],
+      answer: 0
+    },
+    {
+      q: "O que é Rapport em vendas?",
+      options: [
+        "Criação de conexão e confiança com o cliente",
+        "Técnica para fechamento rápido",
+        "Processo de apresentação do produto"
+      ],
+      answer: 0
+    },
+    {
+      q: "Qual gatilho mental indica escassez?",
+      options: [
+        "Últimas unidades disponíveis",
+        "Depoimentos de clientes",
+        "Garantia estendida"
+      ],
+      answer: 0
+    },
+    {
+      q: "SPIN Selling é baseado em que tipo de perguntas?",
+      options: [
+        "Situação, Problema, Implicação, Necessidade",
+        "Simples, Precisão, Informação, Negociação",
+        "Situação, Pergunta, Integração, Negociação"
+      ],
+      answer: 0
+    },
+    {
+      q: "Como lidar com objeções do tipo 'está caro'?",
+      options: [
+        "Mostrar o custo-benefício e valor do produto",
+        "Ignorar a objeção",
+        "Forçar o cliente a decidir rápido"
+      ],
+      answer: 0
+    },
+    {
+      q: "Qual a melhor técnica para fechar uma venda?",
+      options: [
+        "Sem pressão, com confiança e clareza",
+        "Insistindo até o cliente aceitar",
+        "Oferecendo desconto logo de cara"
+      ],
+      answer: 0
+    },
+    {
+      q: "O que é Storytelling em vendas?",
+      options: [
+        "Contar histórias para envolver o cliente",
+        "Descrever características técnicas do produto",
+        "Falar sobre a empresa"
+      ],
+      answer: 0
+    },
+    {
+      q: "Gatilhos mentais servem para:",
+      options: [
+        "Influenciar decisões do cliente",
+        "Confundir o cliente",
+        "Aumentar preço sem justificativa"
+      ],
+      answer: 0
+    },
+    {
+      q: "Por que é importante ouvir o cliente?",
+      options: [
+        "Para entender suas necessidades e objeções",
+        "Para ganhar tempo",
+        "Para controlar a conversa"
+      ],
+      answer: 0
+    },
+    {
+      q: "O que fazer se o cliente disser 'vou pensar'?",
+      options: [
+        "Acompanhar com perguntas e oferecer ajuda",
+        "Encerrar a conversa imediatamente",
+        "Ignorar e seguir para outro cliente"
+      ],
+      answer: 0
+    }
+  ];
+
+  let currentIndex = 0;
+  let shuffledOptions = [];
+  let score = 0;
+  let answered = false;
+
+  const questionNumberEl = document.getElementById('questionNumber');
+  const questionTextEl = document.getElementById('questionText');
+  const optionsEl = document.getElementById('options');
+  const feedbackEl = document.getElementById('feedback');
+  const progressFillEl = document.getElementById('progressFill');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function shuffleArray(arr) {
+    for(let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function loadQuestion(index) {
+    answered = false;
+    feedbackEl.textContent = '';
+    feedbackEl.classList.remove('wrong');
+    nextBtn.disabled = true;
+    prevBtn.disabled = index === 0;
+
+    const currentQ = quiz[index];
+    questionNumberEl.textContent = `Pergunta ${index + 1} de ${quiz.length}`;
+    questionTextEl.textContent = currentQ.q;
+
+    // Embaralhar opções
+    shuffledOptions = currentQ.options
+      .map((opt, i) => ({opt, originalIndex: i}));
+    shuffleArray(shuffledOptions);
+
+    optionsEl.innerHTML = '';
+    shuffledOptions.forEach(({opt}, i) => {
+      const btn = document.createElement('button');
+      btn.classList.add('option-btn');
+      btn.textContent = opt;
+      btn.setAttribute('type', 'button');
+      btn.addEventListener('click', () => selectOption(i));
+      optionsEl.appendChild(btn);
+    });
+
+    updateProgress();
+  }
+
+  function selectOption(selectedIdx) {
+    if(answered) return;
+
+    answered = true;
+    nextBtn.disabled = false;
+
+    const correctOriginalIdx = quiz[currentIndex].answer;
+    const correctShuffledIdx = shuffledOptions.findIndex(o => o.originalIndex === correctOriginalIdx);
+
+    const buttons = optionsEl.querySelectorAll('button');
+
+    buttons.forEach((btn, i) => {
+      btn.disabled = true;
+      if(i === correctShuffledIdx) {
+        btn.classList.add('correct');
+      }
+    });
+
+    if(selectedIdx === correctShuffledIdx) {
+      score++;
+      feedbackEl.textContent = "✔️ Acertou! Mandou bem!";
+      feedbackEl.classList.remove('wrong');
+    } else {
+      buttons[selectedIdx].classList.add('wrong');
+      feedbackEl.textContent = "❌ Errou! Mas continua firme!";
+      feedbackEl.classList.add('wrong');
+    }
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if(currentIndex < quiz.length - 1) {
+      currentIndex++;
+      loadQuestion(currentIndex);
+    } else {
+      showSummary();
+    }
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if(currentIndex > 0) {
+      currentIndex--;
+      loadQuestion(currentIndex);
+    }
+  });
+
+  function updateProgress() {
+    progressFillEl.style.width = `${((currentIndex) / quiz.length) * 100}%`;
+  }
+
+  function showSummary() {
+    // Esconde elementos do quiz
+    questionNumberEl.style.display = 'none';
+    questionTextEl.style.display = 'none';
+    optionsEl.style.display = 'none';
+    feedbackEl.style.display = 'none';
+    prevBtn.style.display = 'none';
+    nextBtn.style.display = 'none';
+    progressFillEl.style.width = '100%';
+
+    // Criar container do resumo
+    const summaryContainer = document.createElement('div');
+    summaryContainer.style.padding = '2rem 2rem';
+    summaryContainer.style.textAlign = 'center';
+    summaryContainer.style.color = getComputedStyle(document.body).color;
+    summaryContainer.style.fontSize = '1.1rem';
+    summaryContainer.style.lineHeight = '1.5';
+
+    // Destaques dinâmicos (pode ser ajustado com lógica mais complexa)
+    const pontoForte = 'Técnicas de Rapport';
+    const areaMelhorar = 'Tratamento de Objeções';
+
+    summaryContainer.innerHTML = `
+      <h2>🎉 Resultado final:</h2>
+      <p>Você mandou bem, acertando <strong>${score}</strong> de <strong>${quiz.length}</strong> questões!</p>
+      <p>Seu destaque? <span style="color:#1e90ff;"><strong>${pontoForte}</strong></span> — essa é sua praia!</p>
+      <p>E pra ficar ainda melhor, que tal focar um pouco mais em <span style="color:#ff6347;"><strong>${areaMelhorar}</strong></span>?</p>
+      <p>Para dar aquele upgrade, olha só estes conteúdos que separei pra você:</p>
+      <ul style="list-style:none; padding-left:0; text-align:left; max-width:400px; margin: 1rem auto;">
+        <li>👉 <a href="https://www.youtube.com/watch?v=nlGm0BTChUw" target="_blank" rel="noopener" style="color:#1e90ff;">Vídeo top sobre Rapport</a></li>
+        <li>👉 <a href="https://endeavor.org.br/vendas/tratamento-de-objecoes/" target="_blank" rel="noopener" style="color:#1e90ff;">Artigo super útil sobre objeções</a></li>
+      </ul>
+      <p>Curte desafios? <a href="https://example.com/simulacao" target="_blank" rel="noopener" style="color:#1e90ff; font-weight:700;">Teste suas habilidades na simulação prática!</a></p>
+      <button id="restartBtn" style="
+        margin-top: 2rem;
+        padding: 0.8rem 2rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 6px 15px rgba(20,74,133,0.4);
+        transition: background 0.3s;
+      ">↺ Voltar ao Início</button>
+      <p style="margin-top:2rem; font-style: italic;">Continue evoluindo, e bora vender muito! 🚀</p>
+    `;
+
+    document.querySelector('.quiz-container').appendChild(summaryContainer);
+
+    // Evento para reiniciar o quiz
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      // Remove o resumo
+      summaryContainer.remove();
+
+      // Mostra os elementos do quiz novamente
+      questionNumberEl.style.display = '';
+      questionTextEl.style.display = '';
+      optionsEl.style.display = '';
+      feedbackEl.style.display = '';
+      prevBtn.style.display = '';
+      nextBtn.style.display = '';
+
+      // Reinicia variáveis e carrega a primeira pergunta
+      score = 0;
+      currentIndex = 0;
+      loadQuestion(currentIndex);
+      updateProgress();
+      feedbackEl.textContent = '';
+      nextBtn.disabled = true;
+      prevBtn.disabled = true;
+    });
+  }
+
+  // Inicializa o quiz
+  loadQuestion(currentIndex);
+  updateProgress();
+</script>
+</body>
+</html>

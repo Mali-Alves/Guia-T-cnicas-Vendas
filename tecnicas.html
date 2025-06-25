@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Técnicas de Vendas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #144a85;
+      --primary-light: #1e63b9;
+      --bg-light: #ffffff;
+      --bg-dark: #0a1e33;
+      --text-light: #0a1e33;
+      --text-dark: #f0f4ff;
+      --card-bg-light: #e6f0fa;
+      --card-bg-dark: #1a2d45;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      min-height: 100vh;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    h1, h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    body.dark h1, body.dark h2 {
+      color: var(--primary-light);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.2rem;
+      max-width: 900px;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--card-bg-light);
+      color: var(--text-light);
+      padding: 1.2rem;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+      user-select: none;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    body.dark .card {
+      background: var(--card-bg-dark);
+      color: var(--text-dark);
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: var(--bg-light);
+      padding: 2rem;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      text-align: left;
+      color: var(--text-light);
+      box-shadow: 0 0 15px rgba(0,0,0,0.25);
+      user-select: text;
+    }
+
+    body.dark .modal-content {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .close {
+      float: right;
+      font-size: 1.5rem;
+      cursor: pointer;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    /* Botão modo noturno */
+    .toggle-theme {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 65px;
+      height: 65px;
+      background: var(--primary);
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(20,74,133,0.5);
+      transition: background 0.3s;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toggle-theme:hover {
+      background: var(--primary-light);
+    }
+
+    body.dark .toggle-theme {
+      background: var(--primary-light);
+      box-shadow: 0 8px 25px rgba(30,110,219,0.9);
+    }
+
+    /* Navegação inferior */
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .nav-buttons a {
+      padding: 0.7rem 1.3rem;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 20px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .nav-buttons a:hover {
+      background: var(--primary-light);
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>💡 Técnicas de Vendas</h1>
+
+  <div class="cards-grid" role="list">
+    <div class="card" role="listitem" tabindex="0" data-title="AIDA" data-desc="AIDA: Atenção, Interesse, Desejo e Ação. Técnica clássica para conduzir o cliente até a compra.">✨ AIDA</div>
+    <div class="card" role="listitem" tabindex="0" data-title="SPIN Selling" data-desc="SPIN: Situação, Problema, Implicação e Necessidade. Perguntas que guiam o cliente até o fechamento.">🧩 SPIN Selling</div>
+    <div class="card" role="listitem" tabindex="0" data-title="Rapport" data-desc="Rapport é a criação de conexão com o cliente. Faz ele confiar mais em você.">🤝 Rapport</div>
+    <div class="card" role="listitem" tabindex="0" data-title="Storytelling" data-desc="Contar histórias envolventes ajuda o cliente a se imaginar usando o produto.">📖 Storytelling</div>
+    <div class="card" role="listitem" tabindex="0" data-title="Gatilhos Mentais" data-desc="Gatilhos como escassez, urgência ou prova social influenciam decisões.">🧠 Gatilhos Mentais</div>
+    <div class="card" role="listitem" tabindex="0" data-title="Objeções" data-desc="Aprenda a ouvir e neutralizar objeções como 'tá caro' ou 'vou pensar'.">🙋‍♂️ Lidar com Objeções</div>
+    <div class="card" role="listitem" tabindex="0" data-title="Follow-up" data-desc="Acompanhe o cliente após a primeira conversa. O 'não' de hoje pode ser o 'sim' de amanhã.">📞 Follow-up</div>
+    <div class="card" role="listitem" tabindex="0" data-title="Urgência" data-desc="Ofertas com prazo limitado aumentam o desejo e ação. Use com ética!">⏰ Urgência</div>
+    <div class="card" role="listitem" tabindex="0" data-title="Prova Social" data-desc="Mostrar que outras pessoas já compraram aumenta a confiança do cliente.">👥 Prova Social</div>
+    <div class="card" role="listitem" tabindex="0" data-title="Preço Percebido" data-desc="Posicione o valor do produto baseado na percepção do cliente, não só no custo.">💰 Preço Percebido</div>
+  </div>
+
+  <div class="nav-buttons">
+    <a href="index.html">🏠 Início</a>
+    <a href="quiz.html">📝 Quiz de Vendas</a>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+    <div class="modal-content">
+      <span class="close" aria-label="Fechar modal" role="button" tabindex="0">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <p id="modalDesc"></p>
+    </div>
+  </div>
+
+  <button aria-label="Alternar modo noturno" class="toggle-theme" id="toggleTheme">🌓</button>
+
+  <script>
+    // Tema
+    const body = document.body;
+    const toggleThemeBtn = document.getElementById('toggleTheme');
+
+    function setDarkMode(on) {
+      if (on) {
+        body.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        body.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+      }
+    }
+
+    if (localStorage.getItem('darkMode') === 'true') {
+      setDarkMode(true);
+    } else {
+      setDarkMode(false);
+    }
+
+    toggleThemeBtn.addEventListener('click', () => {
+      const isDark = body.classList.contains('dark');
+      setDarkMode(!isDark);
+    });
+
+    // Modal lógica
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const closeBtn = modal.querySelector('.close');
+
+    function openModal(title, desc) {
+      modalTitle.textContent = title;
+      modalDesc.textContent = desc;
+      modal.style.display = 'flex';
+      modal.focus();
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Abrir modal ao clicar no card
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        openModal(card.dataset.title, card.dataset.desc);
+      });
+      // Accessibility: abrir modal com Enter
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openModal(card.dataset.title, card.dataset.desc);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

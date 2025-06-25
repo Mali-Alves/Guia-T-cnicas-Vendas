@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simulação Prática - Quiz de Vendas</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    padding: 2rem;
+    background-color: #f5f5f5;
+    max-width: 600px;
+    margin: auto;
+  }
+  .container {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+  h1 {
+    color: #144a85;
+    text-align: center;
+  }
+  .question, .option-btn, #nextBtn {
+    margin: 1rem 0;
+  }
+  .option-btn {
+    display: block;
+    width: 100%;
+    background: #e6f0fa;
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .option-btn:hover {
+    background: #c0d7ff;
+  }
+  #nextBtn {
+    background: #144a85;
+    color: white;
+    border-radius: 20px;
+    padding: 0.8rem 1.6rem;
+    cursor: pointer;
+    border: none;
+    font-size: 1rem;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Simulação Prática de Venda</h1>
+  <p id="scenarioText">Você está atendendo um cliente interessado em um produto.</p>
+  <div id="options"></div>
+  <button id="nextBtn">Próximo</button>
+</div>
+
+<script>
+  const steps = [
+    {
+      scenario: "O cliente entra na loja e parece interessado, o que você faz?",
+      options: [
+        { text: "Cumprimento e pergunto como posso ajudar.", correct: true, feedback: "Ótimo começo! Criar conexão é essencial." },
+        { text: "Ignoro e começo a organizar as prateleiras.", correct: false, feedback: "Negligenciar o cliente pode perder a venda." },
+        { text: "Falo logo do preço do produto.", correct: false, feedback: "Apresentar preço logo pode assustar." }
+      ]
+    },
+    {
+      scenario: "O cliente demonstra dúvida sobre o produto. Como você reage?",
+      options: [
+        { text: "Respondo calmamente às dúvidas.", correct: true, feedback: "Isso gera confiança e aproximação." },
+        { text: "Insisto na venda sem responder.", correct: false, feedback: "Ignorar dúvidas afasta o cliente." },
+        { text: "Digo que é o melhor produto e ponto final.", correct: false, feedback: "Ser agressivo pode afastar o cliente." }
+      ]
+    },
+    {
+      scenario: "O cliente está quase decidido, qual a melhor abordagem?",
+      options: [
+        { text: "Apresentar benefícios e tirar dúvidas.", correct: true, feedback: "Excelente! Ajuda o cliente a decidir." },
+        { text: "Pressionar para fechar a venda.", correct: false, feedback: "Pressão pode causar rejeição." },
+        { text: "Deixar o cliente sozinho para pensar.", correct: false, feedback: "Acompanhar o cliente é importante." }
+      ]
+    }
+  ];
+
+  let currentStep = 0;
+  const optionsDiv = document.getElementById('options');
+  const scenarioText = document.getElementById('scenarioText');
+  const nextBtn = document.getElementById('nextBtn');
+  let score = 0;
+
+  function loadStep(index) {
+    nextBtn.style.display = 'none';
+    optionsDiv.innerHTML = '';
+    scenarioText.textContent = steps[index].scenario;
+
+    steps[index].options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.classList.add('option-btn');
+      btn.textContent = opt.text;
+      btn.onclick = () => {
+        alert(opt.feedback);
+        if(opt.correct) score++;
+        // Desabilitar botões
+        Array.from(optionsDiv.children).forEach(b => b.disabled = true);
+        nextBtn.style.display = 'block';
+      };
+      optionsDiv.appendChild(btn);
+    });
+  }
+
+  nextBtn.addEventListener('click', () => {
+    currentStep++;
+    if(currentStep < steps.length) {
+      loadStep(currentStep);
+    } else {
+      alert(`Simulação finalizada! Você acertou ${score} de ${steps.length}.`);
+      window.location.href = 'resumo.html';
+    }
+  });
+
+  loadStep(currentStep);
+</script>
+</body>
+</html>

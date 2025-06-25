@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz de Vendas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin: 20px;
+    }
+    .quiz-container {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .question-number, .question-text, .feedback {
+      margin-bottom: 15px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      cursor: pointer;
+    }
+    .options button.correct {
+      background-color: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+    .options button.wrong {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+    .progress-bar {
+      height: 10px;
+      background: #e0e0e0;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #4caf50;
+      border-radius: 5px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .final-message {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    a {
+      color: #007bff;
+    }
+    .retry-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .retry-button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Quiz de Técnicas de Vendas</h1>
+  <div class="quiz-container">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="question-number" id="questionNumber"></div>
+    <div class="question-text" id="questionText"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <script>
+    let userName = prompt("Digite seu nome:") || "Usuário";
+
+    const quiz = [
+      {
+        q: "O que é Rapport em vendas?",
+        options: ["Criar conexão com o cliente", "Dar desconto", "Falar rápido"],
+        answer: 0,
+        categoria: "Rapport"
+      },
+      {
+        q: "Qual o significado de AIDA?",
+        options: ["Atenção, Interesse, Desejo, Ação", "Ajuda, Interesse, Direção, Ação", "Análise, Início, Direção, Ação"],
+        answer: 0,
+        categoria: "Gatilhos Mentais"
+      },
+      {
+        q: "Como lidar com 'está caro'?",
+        options: ["Mostrar valor do produto", "Insistir", "Ignorar"],
+        answer: 0,
+        categoria: "Objeções"
+      },
+      {
+        q: "Gatilho de escassez é:",
+        options: ["Últimas unidades", "Garantia estendida", "Produto caro"],
+        answer: 0,
+        categoria: "Gatilhos Mentais"
+      },
+      {
+        q: "Por que ouvir o cliente é importante?",
+        options: ["Para entender necessidades", "Para vender mais caro", "Para falar menos"],
+        answer: 0,
+        categoria: "Rapport"
+      },
+      {
+        q: "Como fechar uma venda com ética?",
+        options: ["Com clareza e confiança", "Pressionando", "Mentindo"],
+        answer: 0,
+        categoria: "Fechamento"
+      },
+      {
+        q: "Storytelling é:",
+        options: ["Contar histórias", "Fazer perguntas", "Falar rápido"],
+        answer: 0,
+        categoria: "Storytelling"
+      },
+      {
+        q: "O que fazer se o cliente diz 'vou pensar'?",
+        options: ["Oferecer ajuda e acompanhar", "Encerrar", "Ignorar"],
+        answer: 0,
+        categoria: "Objeções"
+      }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+    let acertosPorCategoria = {};
+    const questionNumber = document.getElementById("questionNumber");
+    const questionText = document.getElementById("questionText");
+    const optionsContainer = document.getElementById("options");
+    const feedback = document.getElementById("feedback");
+    const progressFill = document.getElementById("progressFill");
+
+    function carregarPergunta() {
+      const atual = quiz[currentIndex];
+      questionNumber.textContent = `Pergunta ${currentIndex + 1} de ${quiz.length}`;
+      questionText.textContent = atual.q;
+      optionsContainer.innerHTML = "";
+      feedback.textContent = "";
+
+      atual.options.forEach((opcao, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = opcao;
+        btn.onclick = () => verificarResposta(i);
+        optionsContainer.appendChild(btn);
+      });
+
+      progressFill.style.width = `${(currentIndex / quiz.length) * 100}%`;
+    }
+
+    function verificarResposta(i) {
+      const atual = quiz[currentIndex];
+      const botoes = optionsContainer.querySelectorAll("button");
+
+      botoes.forEach(btn => btn.disabled = true);
+
+      if (i === atual.answer) {
+        botoes[i].classList.add("correct");
+        feedback.textContent = "✔️ Correto!";
+        score++;
+        acertosPorCategoria[atual.categoria] = (acertosPorCategoria[atual.categoria] || 0) + 1;
+      } else {
+        botoes[i].classList.add("wrong");
+        botoes[atual.answer].classList.add("correct");
+        feedback.textContent = `❌ Errado. A resposta certa é "${atual.options[atual.answer]}".`;
+      }
+
+      setTimeout(() => {
+        currentIndex++;
+        if (currentIndex < quiz.length) {
+          carregarPergunta();
+        } else {
+          mostrarResultado();
+        }
+      }, 1500);
+    }
+
+    function mostrarResultado() {
+      questionNumber.textContent = "";
+      questionText.innerHTML = "";
+      optionsContainer.innerHTML = "";
+      feedback.innerHTML = "";
+
+      progressFill.style.width = "100%";
+
+      let melhor = null;
+      let pior = null;
+      let max = -1;
+      let min = Infinity;
+
+      for (const categoria in acertosPorCategoria) {
+        const acertos = acertosPorCategoria[categoria];
+        if (acertos > max) {
+          max = acertos;
+          melhor = categoria;
+        }
+        if (acertos < min) {
+          min = acertos;
+          pior = categoria;
+        }
+      }
+
+      questionText.innerHTML = `
+        <div class="final-message">
+          <p>🎉 Parabéns, <strong>${userName}</strong>!</p>
+          <p>Você concluiu o quiz com <strong>${score} de ${quiz.length}</strong> pontos.</p>
+          <p><strong>Seu ponto forte:</strong> ${melhor || "N/A"}</p>
+          <p><strong>Área para melhorar:</strong> ${pior || "N/A"}</p>
+          <p>Aqui estão alguns recursos para você se aprofundar:</p>
+          <ul>
+            <li><a href="#">📹 Vídeo sobre Rapport</a></li>
+            <li><a href="#">📄 Artigo sobre tratamento de objeções</a></li>
+          </ul>
+          <p>Quer tentar uma simulação prática para testar suas habilidades? <a href="#">Clique aqui</a></p>
+          <p><em>Obrigado por participar!</em></p>
+          <button class="retry-button" onclick="refazerQuiz()">🔁 Refazer Quiz</button>
+        </div>
+      `;
+    }
+
+    function refazerQuiz() {
+      currentIndex = 0;
+      score = 0;
+      acertosPorCategoria = {};
+      userName = prompt("Digite seu nome:") || "Usuário";
+      carregarPergunta();
+    }
+
+    carregarPergunta();
+  </script>
+</body>
+</html>
